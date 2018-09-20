@@ -1,0 +1,7 @@
+- name: confgiure cron for log roation script
+  cron:
+    name: Log rotation for logstash,kibana and elastic search
+    minute: "00"
+    hour: "05"
+    user: "root"
+    job: "/bin/bash /usr/local/bin/scripts/call-logrotate.sh"

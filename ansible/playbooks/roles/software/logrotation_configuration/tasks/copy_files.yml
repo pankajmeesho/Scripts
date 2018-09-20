@@ -1,0 +1,5 @@
+---
+- name: copy logrotate conf file and script that call run logrotate
+  copy: src="{{ item }}" dest='/usr/local/bin/scripts/'
+  with_items:
+       - call-logrotate.sh

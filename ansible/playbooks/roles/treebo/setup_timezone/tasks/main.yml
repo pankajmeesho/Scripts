@@ -1,0 +1,8 @@
+---
+  - include_vars: defaults/main.yml
+
+  - name: setup | set timezone to  {{ tz }}
+    timezone: name="{{ tz }}"
+
+  - name: Install / Upgrade NTP
+    apt: name=ntpdate state=latest

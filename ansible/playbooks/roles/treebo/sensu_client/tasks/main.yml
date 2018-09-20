@@ -1,0 +1,59 @@
+---
+
+  - name: ansible create directory example
+    file:
+      path: /usr/lib/nagios/plugins
+      owner: root
+      group: root
+      mode: 0755
+      recurse: yes
+      state: directory
+
+  - name: Install build packages
+    apt: name={{ item }} state=present
+    with_items:
+      -  "python-pip"
+
+  - name: Install jsonlint
+    pip: name={{ item }} state=present
+    with_items:
+      - demjson
+
+  - name: configure sensu
+    template: src="templates/client.j2" dest="/etc/sensu/conf.d/client.json" owner=sensu group=sensu mode=0644
+
+  - name: configure rabbitmq consumer
+    template: src="templates/rabbitmq.j2" dest="/etc/sensu/conf.d/rabbitmq.json" owner=sensu group=sensu mode=0644
+
+  - name: create SSL folder for rabbitmq certificates
+    file:  path=/etc/sensu/ssl state=directory mode=0755 owner=sensu group=sensu
+
+  - name: copy pem files
+    copy: src=files/{{ item }} dest=/etc/sensu/ssl/{{ item }} mode=0755 owner=sensu group=sensu
+    with_items:
+      - cert.pem
+      - key.pem
+
+  - name: copy pem files
+    copy: src=files/{{ item }} dest=/usr/lib/nagios/plugins/{{ item }} mode=0755 owner=sensu group=sensu
+    with_items:
+      - check_connections.sh
+      - check_open_fd
+      - check_procs
+      - check_users
+
+  - name: copy sensu sudo file
+    copy: src=files/sensu dest=/etc/sudoers.d/sensu
+
+  - name: Install build packages
+    apt: name={{ item }} state=present
+    with_items:
+      -  "g++"
+
+  - name: install sensu plugins via sensu-install
+    shell: sensu-install -p {{ item }}
+    with_items:
+        - "{{ plugins }}"
+
+  - name: change ownership of /opt/sensu
+    file: path=/opt/sensu mode=755 owner=sensu group=sensu state=directory recurse=yes

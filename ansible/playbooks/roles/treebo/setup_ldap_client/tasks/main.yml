@@ -1,0 +1,80 @@
+---
+  - include_vars: ../vars/main.yml
+  - include_vars: ../vars/{{ region }}.yml
+
+  - name: Printing region which is very important
+    debug:
+      msg: "{{ region }}"
+
+  - name: Ensure dependencies are installed
+    apt: name="{{ item }}" state="present"
+    with_items:
+        - expect
+        - libnss-ldap
+
+  - name: reconfigure ldap-auth-config
+    template: src=../templates/ldap-auth-config.sh.j2 dest=/tmp/ldap-auth-config.sh mode=0755
+
+  - name: Execute ldap-auth-config in non interactive mode
+    shell: sudo /tmp/ldap-auth-config.sh
+
+  - name: Setting LDAP client
+    shell: "auth-client-config -t nss -p lac_ldap"
+
+  - name: Copy ldap config
+    template: src=../templates/ldap.conf.j2 dest=/etc/ldap.conf mode=0644
+
+  - name: Copy common-account file
+    copy:
+      src: ../files/common-account
+      dest: /etc/pam.d/common-account
+      force: true
+      backup: true
+
+  - name: Copy common-auth file
+    copy:
+      src: ../files/common-auth
+      dest: /etc/pam.d/common-auth
+      force: true
+      backup: true
+
+  - name: Copy common-password file
+    copy:
+      src: ../files/common-password
+      dest: /etc/pam.d/common-password
+      force: true
+      backup: true
+
+  - name: Copy common-session file
+    copy:
+      src: ../files/common-session
+      dest: /etc/pam.d/common-session
+      force: true
+      backup: true
+
+  - name: Copy nsswitch file
+    copy:
+      src: "../files/nsswitch.conf"
+      dest: "/etc/nsswitch.conf"
+      force: true
+      backup: true
+
+  - name: Copy sudoers group file
+    copy:
+      src: ../files/ldap-groups
+      dest: /etc/sudoers.d/ldap-groups
+      force: true
+    when: region == 'ap-south-1'
+
+  - name: Copy sudoers group file
+    copy:
+      src: ../files/ldap-groups-sing
+      dest: /etc/sudoers.d/ldap-groups
+      force: true
+    when: region == 'ap-southeast-1'
+
+  - name: Update SSH File to allow password based logins
+    shell: sed -i_back -e 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+
+  - name: Restarting ssh
+    service: name=ssh state=restarted enabled=yes

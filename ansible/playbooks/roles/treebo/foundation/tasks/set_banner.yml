@@ -1,0 +1,23 @@
+---
+  - name: configure ssh banner
+    file: path=/etc/update-motd.d/{{ item }} state=absent
+    with_items:
+       - 50-landscape-sysinfo
+       - 10-help-text
+       - 51-cloudguest
+       - 90-updates-available
+       - 97-overlayroot
+       - 98-cloudguest
+       - 91-release-upgrade
+       - 98-reboot-required
+       - 98-fsck-at-reboot
+
+  - name: Add custom banner
+    copy: src=issue.net  dest=/etc/issue.net owner=root group=root mode=0644
+
+  - name: add modified stats banner
+    copy: src=11-landscape-sysinfo  dest=/etc/update-motd.d/11-landscape-sysinfo owner=root group=root mode=0755
+
+  - name: enable custom banners
+    lineinfile: dest=/etc/ssh/sshd_config state=present insertafter=EOF line="Banner /etc/issue.net"
+    notify: restart sshd

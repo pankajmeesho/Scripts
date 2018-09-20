@@ -1,0 +1,39 @@
+- name: adding conman user to docker group
+  command: 'gpasswd -a conman docker'
+
+- name: add mumbai docker repo url to docker config file
+  copy:
+    content: "{{ docker_hub_url_mumbai }}"
+    dest: /etc/docker/daemon.json
+    force: no
+    group: root
+    owner: root
+    mode: 0600
+  when: region == 'ap-south-1'
+
+- name: add singapore docker repo url to docker config file
+  copy:
+    content: "{{ docker_hub_url_singapore }}"
+    dest: /etc/docker/daemon.json
+    force: no
+    group: root
+    owner: root
+    mode: 0600
+  when: region == 'ap-southeast-1'
+
+- name: restart docker service
+  service: name=docker state=restarted
+
+- name: print to stdout
+  command: 'groups'
+  register: group
+
+- debug: msg="{{ group.stdout }}"
+
+- name: get package version
+  command: 'docker --version'
+  register: version
+
+- name: show version
+  debug:
+    msg: "{{ version.stdout }}"

@@ -1,0 +1,19 @@
+---
+  - name: Add Sensu Repository Key
+    apt_key: data="{{ lookup('file', 'pubkey.gpg') }}" state=present
+
+  - name: get ubuntu distro name
+    shell: echo "deb     https://sensu.global.ssl.fastly.net/apt {{ ansible_distribution_release }} main" | sudo tee /etc/apt/sources.list.d/sensu.list
+
+  - name: Install Prerequistes
+    apt: name={{ item }} update_cache=yes force=yes
+    with_items:
+      - build-essential
+      - python-pip
+      - sensu={{ client_version }}
+
+  - name: change permsissions on /opt/sensu
+    file: path=/opt/sensu state=directory owner=sensu group=sensu
+
+  - name: Enable embedded ruby for sensu
+    lineinfile: dest=/etc/default/sensu regexp=^EMBEDDED_RUBY= line=EMBEDDED_RUBY=true

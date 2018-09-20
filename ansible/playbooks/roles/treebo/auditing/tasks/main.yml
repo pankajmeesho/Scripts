@@ -1,0 +1,8 @@
+ - name: Copy profile to /etc/profile
+   copy: src="files/profile" dest="/etc/profile" backup="yes" owner="root" group="root" mode="644"
+
+ - name: setup custom logger
+   shell: "echo 'local6.*                /var/log/cmd.log' > /etc/rsyslog.d/10-audit.conf"
+
+ - name: Restart rsyslog
+   service: name="rsyslog" state="restarted"

@@ -1,0 +1,29 @@
+---
+- name: Install Docker and role dependencies
+  apt:
+    name: "{{ item }}"
+    state: "present"
+    install_recommends: False
+  with_items:
+    - "apt-transport-https"
+    - "ca-certificates"
+    - "software-properties-common"
+    - "linux-image-extra-virtual"
+    - "curl"
+
+- name: update apt package
+  apt: update_cache=yes
+
+
+- name: Add the key for the docker repository
+  apt_key: state=present keyserver=hkp://keyserver.ubuntu.com:80 id=9DC858229FC7DD38854AE2D88D81803C0EBFCD88
+
+- name: Add Docker repository
+  apt_repository: repo="deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable" state=present
+
+
+- name: update apt package
+  apt: update_cache=yes
+
+- name: Install Docker package
+  apt: name=docker-ce state=latest update_cache=yes cache_valid_time=600

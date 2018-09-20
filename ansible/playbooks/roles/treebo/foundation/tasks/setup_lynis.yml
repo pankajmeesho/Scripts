@@ -1,0 +1,13 @@
+---
+  - name: Install Lynis
+    get_url: url=https://cisofy.com/files/lynis-2.6.4.tar.gz dest=/tmp
+
+  - name: Extract lynis package
+    unarchive: src=/tmp/lynis-2.6.4.tar.gz dest=/opt/ copy=no
+
+  - name: set owner of /opt/lynis as root
+    file: path=/opt/lynis state=directory owner=root group=root mode=0700
+
+  - name: Scan and save a report
+    shell: ./lynis audit system --auditor "devops@treebohotels.com" -c -q --log-file lynis-$(date +%T).txt chdir=/opt/lynis
+    become: yes

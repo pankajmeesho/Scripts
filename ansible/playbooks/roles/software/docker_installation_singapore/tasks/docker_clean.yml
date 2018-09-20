@@ -1,0 +1,23 @@
+---
+- name: Check if docker is installed
+  shell: dpkg -l|grep 'docker'
+  register: docker_check
+
+- name: copy docker clean file
+  copy:
+    src: "docker_cleanup.sh"
+    dest: "/usr/local/bin/scripts/"
+    owner: "root"
+    group: "root"
+    mode:  "0755"
+  when: docker_check.stdout.find('container') != -1
+  register: copy_script
+
+- name: setup cron for docker cleaning
+  cron:
+    name: docker clean images
+    minute: "00"
+    hour: "12"
+    user: "root"
+    job: "/bin/bash /usr/local/bin/scripts/docker_cleanup.sh"
+  when: docker_check.stdout.find('container') != -1

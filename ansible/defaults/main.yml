@@ -1,0 +1,4 @@
+---
+ansible_os_family: Debian
+ansible_distribution: Ubuntu
+setup_ec2: true

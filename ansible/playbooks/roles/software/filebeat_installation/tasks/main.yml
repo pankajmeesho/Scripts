@@ -1,0 +1,22 @@
+---
+
+- name: Add the key for the elasticsearch repository
+  apt_key: url=https://packages.elastic.co/GPG-KEY-elasticsearch state=present
+
+- name: Add elasticsearch repository
+  apt_repository: repo='deb https://artifacts.elastic.co/packages/6.x/apt stable main' state=present
+
+- name: Install filebeat package
+  apt: name=filebeat=6.2.2 update_cache=yes
+
+#- name: Create certificates directory
+#  shell: mkdir -p /etc/pki/tls/certs
+
+#- name: Copy Logstash certificate
+#  copy: src=logstash-forwarder.crt dest=/etc/pki/tls/certs/ owner=root group=root mode=0644
+
+- name: Copy filebeat configration file
+  template: src=filebeat.yml dest=/etc/filebeat/filebeat.yml owner=root group=root mode=0644
+
+- name: Auto-Restart filebeat service
+  command: sudo systemctl enable filebeat

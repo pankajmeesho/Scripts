@@ -1,0 +1,2 @@
+index_name: filebeat_base_image
+logstash_host: 10.20.1.62:5044

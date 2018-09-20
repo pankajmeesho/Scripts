@@ -1,0 +1,2 @@
+%devops-sudo ALL=(ALL:ALL) ALL
+%devops-nonsudo    ALL=(ALL:ALL)  NOPASSWD:/usr/bin/docker *

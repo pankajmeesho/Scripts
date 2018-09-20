@@ -1,0 +1,27 @@
+---
+base_packages:
+    - acct
+    - apt-show-versions
+    - atop
+    - auditd
+    - clamav
+    - clamav-freshclam
+    - collectl
+    - debsums
+    - dstat
+    - git
+    - htop
+    - iftop
+    - language-pack-en
+    - language-pack-en-base
+    - lynis
+    - ncdu
+    - nscd
+    - ntop
+    - python-dev
+    - python-pip
+    - saidar
+    - smem
+    - sysstat
+    - unzip
+    - whowatch

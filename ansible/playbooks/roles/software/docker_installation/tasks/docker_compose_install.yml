@@ -1,0 +1,19 @@
+- name: Install Docker Compose
+  get_url:
+    url: "https://github.com/docker/compose/releases/download/{{ docker_compose_version }}/docker-compose-Linux-x86_64"
+    dest: "/usr/local/bin/docker-compose"
+    force: True
+    owner: "root"
+    group: "root"
+    mode: "0755"
+
+- name: changing permission of docker compose file
+  command: 'chmod +x /usr/local/bin/docker-compose'
+
+- name: get docker compose version
+  command: 'docker-compose --version'
+  register: version
+
+- name: show version
+  debug:
+     msg: "{{ version.stdout }}"

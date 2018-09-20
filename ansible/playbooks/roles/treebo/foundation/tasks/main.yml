@@ -1,0 +1,4 @@
+---
+   - include: manage_packages.yml
+   - include: set_banner.yml
+   - include: setup_lynis.yml

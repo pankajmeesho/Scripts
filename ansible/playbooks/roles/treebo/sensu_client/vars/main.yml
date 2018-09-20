@@ -1,0 +1,11 @@
+hostname: <Hostname>
+instance_ip: <IP>
+slack_channel: "#dvo"
+plugins:
+   - cpu-checks
+   - disk-checks
+   - load-checks
+   - memory-checks
+   - process-checks
+   - network-checks
+   - http

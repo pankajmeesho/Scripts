@@ -1,0 +1,22 @@
+---
+  - include: install_python.yml
+
+  - hosts: all
+    become: yes
+    become_method: sudo
+
+    vars_files:
+      - "../defaults/main.yml"
+
+    vars:
+        group_name: users
+
+    roles:
+      - treebo/setup_timezone
+      - treebo/auditing
+      - treebo/setup_user
+      - treebo/foundation
+      - treebo/hardening
+      - treebo/setup_ldap_client
+      - software/docker_installation
+      - software/logrotation_configuration

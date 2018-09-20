@@ -1,0 +1,7 @@
+{
+    "aws_region":"ap-south-1",
+    "ami_id": "ami-5d055232",
+    "vpc_id": "vpc-1f820776",
+    "subnet_id": "subnet-a57bfccc",
+    "distro": "1604"
+}

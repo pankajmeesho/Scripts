@@ -1,0 +1,46 @@
+{
+  "variables": {
+    "aws_access_key": "",
+    "aws_secret_key": "",
+    "aws_region":"ap-south-1",
+    "ami_id":"ami-c2ee9dad",
+    "vpc_id": "vpc-1f820776",
+    "subnet_id": "subnet-a57bfccc",
+    "distro":""
+
+  },
+  "builders": [{
+    "type": "amazon-ebs",
+     "tags": {
+        "BuildUUID": "{{user `build_uuid`}}",
+        "pod": "devops",
+        "env": "prod"
+      },
+    "run_tags": {
+        "pod": "devops",
+        "env": "prod"
+      },
+    "vpc_id": "{{user `vpc_id`}}",
+    "subnet_id": "{{user `subnet_id`}}",
+    "access_key": "{{user `aws_access_key`}}",
+    "secret_key": "{{user `aws_secret_key`}}",
+    "region": "{{user `aws_region`}}",
+    "source_ami": "{{user `ami_id`}}",
+    "instance_type": "m4.large",
+    "ssh_username": "ubuntu",
+    "ami_name": "treebo_base_devenv-{{timestamp}}-{{user `distro`}}",
+    "associate_public_ip_address": "true"
+  }],
+  "provisioners": [
+    {
+      "type": "ansible",
+      "playbook_file": "../ansible/playbooks/packer_devenv_base.yml",
+      "ansible_env_vars": [ "ANSIBLE_HOST_KEY_CHECKING=False",
+			     "ANSIBLE_SSH_ARGS='-o ForwardAgent=yes -o ControlMaster=auto -o ControlPersist=60s'",
+		              "ANSIBLE_NOCOLOR=True"
+                          ],
+      "extra_arguments": ["--extra-vars", "env=\"dev\" region={{ user `region` }} server_name=\"base\" subscriptions=[\"base\"] rmq_password=\"xxxxxxxxxx\" install_cron=\"true\"" ]
+
+    }
+  ]
+}

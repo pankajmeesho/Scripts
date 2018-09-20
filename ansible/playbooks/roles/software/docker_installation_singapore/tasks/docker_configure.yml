@@ -1,0 +1,22 @@
+- name: adding conman user to docker group
+  command: 'gpasswd -a conman docker'
+
+- name: add docker repo url to docker config file
+  copy:
+    content: "{{ docker_hub_url_singapore }}"
+    dest: /etc/docker/daemon.json
+    force: no
+    group: root
+    owner: root
+    mode: 0600
+
+- name: restart docker service
+  service: name=docker state=restarted
+
+- name: get package version
+  command: 'docker --version'
+  register: version
+
+- name: show version
+  debug:
+     msg: "{{ version.stdout }}"

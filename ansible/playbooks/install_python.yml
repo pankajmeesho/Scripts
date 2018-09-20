@@ -1,0 +1,16 @@
+---
+  - hosts: all
+    become: yes
+    become_method: sudo
+    gather_facts: no
+    vars_files:
+        - "../defaults/main.yml"
+
+    vars:
+        group_name: users
+
+    tasks:
+      - name: 'install python2'
+        raw: test -f /usr/bin/python || (apt -y update && apt install -qy python-minimal python-setuptools python-simplejson)
+        register: output
+        changed_when: output.stdout != ""

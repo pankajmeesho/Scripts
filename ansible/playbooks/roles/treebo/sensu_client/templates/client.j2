@@ -1,0 +1,16 @@
+{
+      "client": {
+        "name": "{{ hostname }}",
+        "address": "{{ instance_ip }}",
+        "subscriptions": ["base"],
+        "slack": {
+            "channels":["{{ slack_channel }}"]
+         },
+        "keepalive": {
+                "thresholds": {
+                        "warning": 250,
+                        "critical": 300
+         }
+       }
+     }
+}

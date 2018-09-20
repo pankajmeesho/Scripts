@@ -1,0 +1,5 @@
+user_name: jenkins
+user_password: jenkins
+docker_hub_url_singapore: { "insecure-registries" : ["docker-hub.treebo.com:5000"] }
+sudo_file: /etc/sudoers
+docker_compose_version: 1.21.0

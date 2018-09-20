@@ -1,0 +1,13 @@
+# The distinguished name of the search base.
+base dc={{ ldap_suffix }}
+
+# Another way to specify your LDAP server is to provide an
+uri {{ ldap_uri }}
+
+
+# The LDAP version to use (defaults to 3
+ldap_version 3
+
+pam_password md5
+
+nss_initgroups_ignoreusers backup,bin,daemon,games,gnats,irc,landscape,libuuid,list,lp,mail,man,memcache,messagebus,mysql,nagios,newrelic,news,nginx,pollinate,postfix,postgres,proxy,root,snmp,sshd,sync,sys,syslog,uucp,www-data

@@ -1,0 +1,3 @@
+---
+logfiles: /var/log/cmd.log
+#logstash_certificate: "/etc/pki/tls/certs/logstash-forwarder.crt"

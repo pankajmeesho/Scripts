@@ -1,0 +1,21 @@
+  - name: Check | if user exists
+    shell: id {{ users.username }}
+    register: user_present
+    ignore_errors: yes
+
+  - name: Setup | Create user and setup home directory.
+    command: useradd -m "{{ users.username }}" creates=/home/"{{ users.username }}" -u "{{ users.uid }}"
+    when: user_present.stdout.find('uid') == -1
+    ignore_errors: yes
+
+  - name: Setup | Create .SSH directory for the user if it doesn't exists.
+    file: path=/home/{{ users.username }}/.ssh state=directory mode=0755 owner={{ users.username }} group=users
+
+  - name: Setup | Sudoers Entry for user  under /etc/sudoers.d/"{{ users.username }}" on remote servers.
+    copy: src=files/{{ users.username }}  dest=/etc/sudoers.d/{{ users.username }} owner=root group=root mode=0440
+
+  - name: Setup | Copy user pub key to the remote servers.
+    copy: src=files/keys/{{ users.username }}.pub dest=/home/{{ users.username }}/.ssh/authorized_keys owner={{ users.username }} group=users mode=600
+
+  - name: Setup | Set User ownerships for conman.
+    command: chown -R {{ users.username }}:users /home/{{ users.username }}/.ssh

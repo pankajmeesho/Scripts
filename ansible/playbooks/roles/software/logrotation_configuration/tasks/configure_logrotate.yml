@@ -1,0 +1,12 @@
+- name: create directory for log rotation conf file
+  file:
+    path: /usr/local/bin/scripts
+    state: directory
+    owner: root
+    group: root
+    mode: 0777
+    recurse: yes
+
+
+- name: configuring log rotation
+  template: src=logrotate-treebo.conf dest=/usr/local/bin/scripts/ owner=root group=root mode=0644
