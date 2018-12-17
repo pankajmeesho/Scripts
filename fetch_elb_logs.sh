@@ -1,3 +1,18 @@
+#!/bin/bash
+
+#install the npm if it's not installed
+# pip install npm
+# install 
+#npm install -g elb-log-analyzer
+
+install_analyzer()
+{
+echo "installing npm"
+pip install npm
+echo "installing analyzer"
+npm install -g elb-log-analyzer
+}
+
 get_bucket_info()
 {
 echo "enter name of the bucket"
@@ -47,6 +62,7 @@ status_code()
  echo "================================"
 }
 
+#install_analyzer
 get_bucket_info
 remove_old_log
 fetch_data
